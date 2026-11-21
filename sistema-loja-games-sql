@@ -1,0 +1,390 @@
+CREATE DATABASE LojaGames_ALTF4;
+USE LojaGames_ALTF4;
+
+CREATE TABLE cliente (
+cod_cliente INT AUTO_INCREMENT PRIMARY KEY,
+nome_cliente VARCHAR(100) NOT NULL,
+telefone_cliente VARCHAR(20),
+cpf_cliente VARCHAR(11) UNIQUE
+);
+
+
+CREATE TABLE funcionario (
+cod_funcionario INT AUTO_INCREMENT PRIMARY KEY,
+nome_funcionario VARCHAR(100) NOT NULL,
+data_nascimento DATE,
+telefone_funcionario VARCHAR(20)
+);
+
+
+CREATE TABLE plataforma (
+cod_plataforma INT AUTO_INCREMENT PRIMARY KEY,
+nome_plataforma VARCHAR(50) NOT NULL,
+plataforma_fabricante VARCHAR(50)
+);
+
+
+CREATE TABLE categoria (
+cod_categoria INT AUTO_INCREMENT PRIMARY KEY,
+nome_categoria VARCHAR(50) NOT NULL,
+descricao_categoria VARCHAR(150)
+);
+
+
+
+CREATE TABLE jogo (
+cod_jogo INT AUTO_INCREMENT PRIMARY KEY,
+nome_jogo VARCHAR(100) NOT NULL,
+preco_jogo DECIMAL(10,2) NOT NULL,
+ano_lancamento INT,
+quantidade_estoque INT NOT NULL,
+cod_categoria INT NOT NULL,
+cod_plataforma INT NOT NULL,
+
+	FOREIGN KEY (cod_categoria)
+		REFERENCES categoria(cod_categoria),
+
+	FOREIGN KEY (cod_plataforma)
+		REFERENCES plataforma(cod_plataforma)
+);
+
+
+CREATE TABLE venda (
+cod_venda INT AUTO_INCREMENT PRIMARY KEY,
+data_venda DATE NOT NULL,
+valor_total DECIMAL(10,2) NOT NULL,
+cod_cliente INT NOT NULL,
+cod_funcionario INT NOT NULL,
+
+	FOREIGN KEY (cod_cliente)
+		REFERENCES cliente(cod_cliente),
+
+	FOREIGN KEY (cod_funcionario)
+		REFERENCES funcionario(cod_funcionario)
+);
+
+
+CREATE TABLE item_venda (
+cod_item INT AUTO_INCREMENT PRIMARY KEY,
+quantidade INT NOT NULL,
+preco_unitario DECIMAL(10,2) NOT NULL,
+cod_venda INT NOT NULL,
+cod_jogo INT NOT NULL,
+
+	FOREIGN KEY (cod_venda)
+		REFERENCES venda(cod_venda),
+
+	FOREIGN KEY (cod_jogo)
+		REFERENCES jogo(cod_jogo)
+);
+
+
+CREATE TABLE pagamento (
+cod_pagamento INT AUTO_INCREMENT PRIMARY KEY,
+valor_pagamento DECIMAL(10,2) NOT NULL,
+data_pagamento DATE,
+forma_pagamento VARCHAR(30),
+status_pagamento VARCHAR(30),
+cod_venda INT NOT NULL,
+
+	FOREIGN KEY (cod_venda)
+		REFERENCES venda(cod_venda)
+);
+
+SHOW TABLES;
+
+INSERT INTO cliente(nome_cliente, telefone_cliente, cpf_cliente) VALUES
+('Lucas Almeida', '61999991111', '11111111111'),
+('Mariana Costa', '61999992222', '22222222222'),
+('Pedro Santos', '61999993333', '33333333333'),
+('Ana Oliveira', '61999994444', '44444444444'),
+('Gabriel Souza', '61999995555', '55555555555'),
+('Julia Ferreira', '61999996666', '66666666666'),
+('Rafael Lima', '61999997777', '77777777777'),
+('Beatriz Martins', '61999998888', '88888888888'),
+('Felipe Rodrigues', '61999990000', '99999999999'),
+('Camila Alves', '61999990001', '00000000000');
+
+
+INSERT INTO funcionario (nome_funcionario, data_nascimento, telefone_funcionario) VALUES
+('Carlos Mendes', '1995-04-12', '61988881111'),
+('Fernanda Silva', '1998-07-23', '61988882222'),
+('Roberto Lima', '1992-02-15', '61988883333'),
+('Amanda Souza', '2000-09-10', '61988884444'),
+('Bruno Costa', '1996-11-05', '61988885555'),
+('Larissa Alves', '1999-01-20', '61988886666'),
+('Diego Martins', '1994-06-18', '61988887777'),
+('Camila Rocha', '2001-03-30', '61988888888'),
+('Eduardo Santos', '1993-12-08', '61988889999'),
+('Patricia Oliveira', '1997-08-14', '61988880000');
+
+
+INSERT INTO categoria (nome_categoria, descricao_categoria) VALUES
+('Ação', 'Jogos com combate e desafios'),
+('Aventura', 'Jogos focados em exploração'),
+('RPG', 'Jogos com evolução de personagens'),
+('Esporte', 'Jogos de modalidades esportivas'),
+('Corrida', 'Jogos de velocidade e competição'),
+('Terror', 'Jogos com elementos de medo e suspense'),
+('Estratégia', 'Jogos que exigem planejamento'),
+('Simulação', 'Jogos que simulam situações reais'),
+('Luta', 'Jogos de combate entre personagens'),
+('Plataforma', 'Jogos com saltos e obstáculos');
+
+
+INSERT INTO plataforma (nome_plataforma, plataforma_fabricante) VALUES
+('PlayStation 5', 'Sony'),
+('PlayStation 4', 'Sony'),
+('Xbox Series X', 'Microsoft'),
+('Xbox One', 'Microsoft'),
+('Nintendo Switch', 'Nintendo'),
+('PC', 'Diversos'),
+('PlayStation 3', 'Sony'),
+('Xbox 360', 'Microsoft'),
+('Nintendo Wii', 'Nintendo'),
+('Nintendo 3DS', 'Nintendo');
+
+
+INSERT INTO jogo (nome_jogo, preco_jogo, ano_lancamento, quantidade_estoque, cod_categoria, cod_plataforma) VALUES
+('God of War Ragnarok', 299.90, 2022, 15, 1, 1),
+('The Last of Us Part II', 199.90, 2020, 10, 1, 2),
+('Elden Ring', 249.90, 2022, 20, 3, 1),
+('FIFA 25', 299.90, 2024, 12, 4, 1),
+('Forza Horizon 5', 199.90, 2021, 18, 5, 3),
+('Resident Evil 4', 229.90, 2023, 8, 6, 1),
+('Minecraft', 99.90, 2011, 25, 8, 6),
+('Street Fighter 6', 249.90, 2023, 14, 9, 1),
+('Hollow Knight', 59.90, 2017, 30, 2, 5),
+('Red Dead Redemption 2', 179.90, 2018, 11, 2, 2);
+
+
+INSERT INTO venda (data_venda, valor_total, cod_cliente, cod_funcionario) VALUES
+('2026-01-10', 299.90, 1, 1),
+('2026-01-12', 199.90, 2, 2),
+('2026-01-15', 249.90, 3, 3),
+('2026-02-01', 599.80, 4, 4),
+('2026-02-05', 99.90, 5, 5),
+('2026-02-10', 229.90, 6, 6),
+('2026-02-15', 349.80, 7, 7),
+('2026-03-01', 249.90, 8, 8),
+('2026-03-05', 179.90, 9, 9),
+('2026-03-10', 399.80, 10, 10);
+
+
+INSERT INTO item_venda (quantidade, preco_unitario, cod_venda, cod_jogo) VALUES
+(1, 299.90, 1, 1),
+(1, 199.90, 2, 2),
+(1, 249.90, 3, 3),
+(2, 299.90, 4, 4),
+(1, 99.90, 5, 7),
+(1, 229.90, 6, 6),
+(2, 174.90, 7, 5),
+(1, 249.90, 8, 8),
+(1, 179.90, 9, 10),
+(2, 199.90, 10, 2);
+
+INSERT INTO pagamento (valor_pagamento, data_pagamento, forma_pagamento, status_pagamento, cod_venda) VALUES
+(299.90, '2026-01-10', 'Pix', 'Aprovado', 1),
+(199.90, '2026-01-12', 'Cartão de crédito', 'Aprovado', 2),
+(249.90, '2026-01-15', 'Dinheiro', 'Aprovado', 3),
+(599.80, '2026-02-01', 'Pix', 'Aprovado', 4),
+(99.90, '2026-02-05', 'Cartão de débito', 'Aprovado', 5),
+(229.90, '2026-02-10', 'Pix', 'Aprovado', 6),
+(349.80, '2026-02-15', 'Cartão de crédito', 'Aprovado', 7),
+(249.90, '2026-03-01', 'Dinheiro', 'Aprovado', 8),
+(179.90, '2026-03-05', 'Pix', 'Aprovado', 9),
+(399.80, '2026-03-10', 'Cartão de crédito', 'Aprovado', 10);
+
+
+SELECT COUNT(*) AS total_clientes FROM cliente;
+SELECT COUNT(*) AS total_funcionarios FROM funcionario;
+SELECT COUNT(*) AS total_categorias FROM categoria;
+SELECT COUNT(*) AS total_plataformas FROM plataforma;
+SELECT COUNT(*) AS total_jogos FROM jogo;
+SELECT COUNT(*) AS total_vendas FROM venda;
+SELECT COUNT(*) AS total_itens FROM item_venda;
+SELECT COUNT(*) AS total_pagamentos FROM pagamento;
+
+
+SELECT *
+FROM jogo;
+
+SELECT nome_jogo, preco_jogo
+FROM jogo;
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+WHERE preco_jogo > 100;
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+WHERE preco_jogo <= 100;
+
+
+SELECT DISTINCT cod_categoria
+FROM jogo;
+
+
+SELECT nome_jogo
+FROM jogo
+WHERE nome_jogo LIKE '%God%';
+
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+WHERE preco_jogo BETWEEN 100 AND 250;
+
+
+SELECT nome_jogo, cod_categoria
+FROM jogo
+WHERE cod_categoria IN (1, 3, 6);
+
+
+SELECT nome_jogo, preco_jogo, quantidade_estoque
+FROM jogo
+WHERE quantidade_estoque < 15
+AND preco_jogo > 100;
+
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+WHERE preco_jogo < 100
+OR preco_jogo > 250;
+
+
+SELECT nome_jogo, cod_categoria
+FROM jogo
+WHERE NOT cod_categoria = 1;
+
+
+SELECT nome_jogo, cod_plataforma
+FROM jogo
+WHERE cod_plataforma <> 1;
+
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+WHERE preco_jogo >= 200;
+
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+ORDER BY preco_jogo DESC;
+
+
+SELECT
+nome_jogo,
+preco_jogo * quantidade_estoque AS valor_estoque
+FROM jogo;
+
+
+SELECT SUM(valor_total) AS faturamento_total
+FROM venda;
+
+
+SELECT
+round(AVG(preco_jogo),2) AS preco_medio,
+MAX(preco_jogo) AS maior_preco,
+MIN(preco_jogo) AS menor_preco
+FROM jogo;
+
+
+SELECT
+categoria.nome_categoria,
+COUNT(jogo.cod_jogo) AS total_jogos
+FROM categoria
+INNER JOIN jogo
+ON categoria.cod_categoria = jogo.cod_categoria
+GROUP BY categoria.nome_categoria;
+
+
+SELECT nome_jogo, preco_jogo
+FROM jogo
+WHERE preco_jogo > (
+SELECT AVG(preco_jogo)
+FROM jogo
+);
+
+-- dicil
+
+SELECT
+cliente.nome_cliente,
+SUM(venda.valor_total) AS total_gasto
+FROM cliente
+INNER JOIN venda
+ON cliente.cod_cliente = venda.cod_cliente
+GROUP BY cliente.cod_cliente, cliente.nome_cliente
+HAVING SUM(venda.valor_total) > 500;
+
+
+DELIMITER //
+
+CREATE TRIGGER verificar_estoque
+BEFORE INSERT ON item_venda
+FOR EACH ROW
+
+BEGIN
+
+IF NEW.quantidade <= 0 THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Quantidade invalida!';
+END IF;
+
+IF NOT EXISTS (
+SELECT 1
+FROM jogo
+WHERE cod_jogo = NEW.cod_jogo
+AND quantidade_estoque >= NEW.quantidade
+) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Estoque insuficiente!';
+END IF;
+
+
+END //
+
+DELIMITER ;
+
+
+
+
+
+DELIMITER //
+
+CREATE TRIGGER atualizar_estoque
+AFTER INSERT ON item_venda
+FOR EACH ROW
+
+BEGIN
+
+UPDATE jogo
+SET quantidade_estoque = quantidade_estoque - NEW.quantidade
+WHERE cod_jogo = NEW.cod_jogo;
+
+END //
+
+DELIMITER ;
+
+INSERT INTO item_venda (quantidade, preco_unitario, cod_venda, cod_jogo) VALUES
+(41, 249.90, 2, 1);
+
+SHOW TRIGGERS;
+
+
+SELECT nome_cliente AS nome, 'Cliente' AS tipo
+FROM cliente
+
+UNION
+
+SELECT nome_funcionario, 'Funcionario'
+FROM funcionario;
+
+
+
+SELECT
+nome_jogo,
+preco_jogo + 10 AS preco_com_acrescimo,
+preco_jogo - 10 AS preco_com_desconto,
+preco_jogo * quantidade_estoque AS valor_estoque,
+preco_jogo / 2 AS metade_do_preco
+FROM jogo;
